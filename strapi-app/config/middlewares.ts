@@ -19,7 +19,11 @@ export default [
             contentSecurityPolicy: {
                 useDefaults: true,
                 directives: {
-                    "script-src": ["https://cdn.ckeditor.com"],
+                    "script-src": [
+                        "'self'",
+                        "'unsafe-eval'",
+                        "https://cdn.ckeditor.com",
+                    ],
                     "frame-src": [
                         "'self'",
                         "youtube.com",
