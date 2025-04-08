@@ -32,7 +32,7 @@ function formatDate(date: string) {
         <UCard>
             <template #header>
                 <img
-                    :src="config.public.apiBase + article[0].cover.url"
+                    :src="article[0].cover.url"
                     class="w-full h-auto rounded object-cover aspect-[16/9]" />
                 <h1 class="text-3xl font-bold">{{ article[0].title }}</h1>
                 <p class="text-sm text-gray-500 mt-1">
