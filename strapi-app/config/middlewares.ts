@@ -4,7 +4,10 @@ export default [
     {
         name: "strapi::cors",
         config: {
-            origin: ["http://localhost:3000"],
+            origin: [
+                "http://localhost:3000",
+                "https://blog-injective.netlify.app",
+            ],
         },
     },
     "strapi::poweredBy",
