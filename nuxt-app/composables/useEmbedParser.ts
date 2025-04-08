@@ -8,7 +8,7 @@ export function useEmbedParser(html: string | undefined): string {
         if (youtubeMatch) {
             const videoId = youtubeMatch[1];
             return `
-          <div class="embed">
+          <div class="aspect-w-16 aspect-h-9">
             <iframe width="560" height="315"
               src="https://www.youtube.com/embed/${videoId}"
               frameborder="0"

@@ -1,24 +1,60 @@
-<script setup>
+<script setup lang="ts">
 const config = useRuntimeConfig();
-const { data: articles, error } = await useAsyncData("articles", () =>
-    $fetch("/api/articles", {
-        baseURL: config.public.apiBase,
-        headers: process.server
-            ? { Authorization: `Bearer ${config.apiToken}` }
-            : undefined,
-    })
-);
+
+const { data: articles, error } = await useFetch("/api/articles", {
+    baseURL: config.public.apiBase,
+    headers: process.server
+        ? { Authorization: `Bearer ${config.apiToken}` }
+        : undefined,
+    params: {
+        populate: ["cover"],
+    },
+    transform: (res) => res.data,
+});
+
+function formatDate(date: string) {
+    return new Date(date).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+    });
+}
 </script>
 
 <template>
-    <div>
-        <div v-if="error">Error loading posts: {{ error.message }}</div>
-        <ul v-else>
-            <li v-for="article in articles.data" :key="article.id">
-                <NuxtLink :to="`/${article.slug}`">
-                    {{ article.title }}
-                </NuxtLink>
-            </li>
-        </ul>
-    </div>
+    <UContainer class="py-10">
+        <h1 class="text-4xl font-bold mb-6">Latest Articles</h1>
+
+        <div v-if="error" class="text-red-500">
+            Error loading articles: {{ error.message }}
+        </div>
+        <div v-else-if="!articles">Loading...</div>
+
+        <div v-else class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <UCard
+                v-for="article in articles"
+                :key="article.id"
+                class="hover:shadow-lg transition">
+                <template #header>
+                    <img
+                        :src="config.public.apiBase + article.cover.url"
+                        class="w-full h-auto rounded object-cover aspect-[16/9]" />
+                    <div
+                        class="text-xl font-semibold text-primary hover:underline">
+                        {{ article.title }}
+                    </div>
+                    <div class="text-sm text-gray-500">
+                        {{ formatDate(article.publishedAt) }}
+                    </div>
+                </template>
+                <template #footer>
+                    <NuxtLink
+                        :to="`/${article.slug}`"
+                        class="text-sm text-primary hover:underline">
+                        Read more →
+                    </NuxtLink>
+                </template>
+            </UCard>
+        </div>
+    </UContainer>
 </template>
