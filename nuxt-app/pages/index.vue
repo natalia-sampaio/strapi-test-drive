@@ -19,6 +19,7 @@ function formatDate(date: string) {
         day: "numeric",
     });
 }
+console.log(articles.value[0].cover.url);
 </script>
 
 <template>
@@ -37,7 +38,7 @@ function formatDate(date: string) {
                 class="hover:shadow-lg transition">
                 <template #header>
                     <img
-                        :src="config.public.apiBase + article.cover.url"
+                        :src="article.cover.url"
                         class="w-full h-auto rounded object-cover aspect-[16/9]" />
                     <div
                         class="text-xl font-semibold text-primary hover:underline">
