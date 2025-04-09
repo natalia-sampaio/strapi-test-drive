@@ -18,8 +18,6 @@ function formatDate(date: string) {
 
 <template>
     <UContainer class="py-10">
-        <h1 class="text-4xl font-bold mb-6">Latest Articles</h1>
-
         <div v-if="error" class="text-red-500">
             Error loading articles:
             {{ error }}

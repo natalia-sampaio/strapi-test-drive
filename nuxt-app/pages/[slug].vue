@@ -4,18 +4,16 @@ import { useEmbedParser } from "@/composables/useEmbedParser";
 const route = useRoute();
 const { find } = useStrapi();
 
-const { data: result, error } = await useAsyncData("article", async () =>
+const { data: result } = await useAsyncData("article", () =>
     find("articles", {
         populate: ["cover"],
         filters: {
-            slug: {
-                $eq: route.params.slug,
-            },
+            slug: { $eq: route.params.slug },
         },
     })
 );
 
-const article = computed(() => result.value?.data?.[0] || null);
+const article = computed(() => result.value?.data?.[0]);
 const rawHtml = article.value?.body;
 const parsedHtml = useEmbedParser(rawHtml);
 
