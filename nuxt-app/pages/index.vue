@@ -1,12 +1,6 @@
 <script setup lang="ts">
-const { find } = useStrapi();
-
-const { data: articles, error } = await useAsyncData("articles", () =>
-    find("articles", {
-        populate: ["cover"],
-    })
-);
-
+const { data: articles, error } = await useFetch("/api/articles");
+console.log(articles.value);
 function formatDate(date: string) {
     return new Date(date).toLocaleDateString("en-US", {
         year: "numeric",
