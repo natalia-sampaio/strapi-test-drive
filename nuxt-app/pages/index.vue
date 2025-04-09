@@ -1,16 +1,11 @@
 <script setup lang="ts">
-const config = useRuntimeConfig();
+const { find } = useStrapi();
 
-const { data: articles, error } = await useFetch("/api/articles", {
-    baseURL: config.public.apiBase,
-    headers: process.server
-        ? { Authorization: `Bearer ${config.apiToken}` }
-        : undefined,
-    params: {
+const { data: articles, error } = await useAsyncData("articles", () =>
+    find("articles", {
         populate: ["cover"],
-    },
-    transform: (res) => res.data,
-});
+    })
+);
 
 function formatDate(date: string) {
     return new Date(date).toLocaleDateString("en-US", {
@@ -19,7 +14,6 @@ function formatDate(date: string) {
         day: "numeric",
     });
 }
-console.log(articles.value[0].cover.url);
 </script>
 
 <template>
@@ -27,18 +21,19 @@ console.log(articles.value[0].cover.url);
         <h1 class="text-4xl font-bold mb-6">Latest Articles</h1>
 
         <div v-if="error" class="text-red-500">
-            Error loading articles: {{ error.message }}
+            Error loading articles:
+            {{ error }}
         </div>
         <div v-else-if="!articles">Loading...</div>
 
         <div v-else class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             <UCard
-                v-for="article in articles"
+                v-for="article in articles.data"
                 :key="article.id"
                 class="hover:shadow-lg transition">
                 <template #header>
                     <img
-                        :src="article.cover.url"
+                        :src="article.cover?.url"
                         class="w-full h-auto rounded object-cover aspect-[16/9]" />
                     <div
                         class="text-xl font-semibold text-primary hover:underline">

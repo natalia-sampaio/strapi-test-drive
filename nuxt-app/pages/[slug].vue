@@ -1,21 +1,22 @@
 <script setup lang="ts">
 import { useEmbedParser } from "@/composables/useEmbedParser";
+
 const route = useRoute();
-const config = useRuntimeConfig();
+const { find } = useStrapi();
 
-const { data: article, error } = await useFetch(`/api/articles`, {
-    baseURL: config.public.apiBase,
-    headers: process.server
-        ? { Authorization: `Bearer ${config.apiToken}` }
-        : undefined,
-    params: {
-        "filters[slug][$eq]": route.params.slug,
+const { data: result, error } = await useAsyncData("article", async () =>
+    find("articles", {
         populate: ["cover"],
-    },
-    transform: (res) => res.data,
-});
+        filters: {
+            slug: {
+                $eq: route.params.slug,
+            },
+        },
+    })
+);
 
-const rawHtml = article.value[0].body;
+const article = computed(() => result.value?.data?.[0] || null);
+const rawHtml = article.value?.body;
 const parsedHtml = useEmbedParser(rawHtml);
 
 function formatDate(date: string) {
@@ -29,26 +30,32 @@ function formatDate(date: string) {
 
 <template>
     <div class="max-w-3xl mx-auto px-4 py-10 space-y-6">
-        <UCard>
+        <UCard v-if="article">
             <template #header>
                 <img
-                    :src="article[0].cover.url"
+                    :src="article.cover?.url"
                     class="w-full h-auto rounded object-cover aspect-[16/9]" />
-                <h1 class="text-3xl font-bold">{{ article[0].title }}</h1>
+                <h1 class="text-3xl font-bold">{{ article.title }}</h1>
                 <p class="text-sm text-gray-500 mt-1">
-                    Published on {{ formatDate(article[0].createdAt) }}
+                    Published on {{ formatDate(article.createdAt) }}
                 </p>
             </template>
 
             <div
                 v-html="parsedHtml"
-                class="prose dark:prose-invert prose-neutralmax-w-none" />
+                class="prose dark:prose-invert prose-neutral max-w-none" />
 
             <template #footer>
                 <div class="text-right text-sm text-gray-400">
-                    Last updated: {{ formatDate(article[0].updatedAt) }}
+                    Last updated: {{ formatDate(article.updatedAt) }}
                 </div>
             </template>
         </UCard>
+
+        <div v-else-if="error" class="text-red-500">
+            Failed to load article: {{ error.message || "Unknown error" }}
+        </div>
+
+        <div v-else>Loading article...</div>
     </div>
 </template>
