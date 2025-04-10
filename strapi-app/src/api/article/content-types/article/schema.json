@@ -28,20 +28,6 @@
         "images"
       ]
     },
-    "body": {
-      "type": "customField",
-      "options": {
-        "output": "HTML",
-        "preset": "standard",
-        "licenseKey": "eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3NzU2MDYzOTksImp0aSI6Ijg0YjlkYWU3LTkwYWItNGRmYS1hODFiLWU2M2ZjZWNkYzhjOSIsInVzYWdlRW5kcG9pbnQiOiJodHRwczovL3Byb3h5LWV2ZW50LmNrZWRpdG9yLmNvbSIsImRpc3RyaWJ1dGlvbkNoYW5uZWwiOlsiY2xvdWQiLCJkcnVwYWwiXSwiZmVhdHVyZXMiOlsiRFJVUCJdLCJ2YyI6ImM3N2ExOWU2In0.RLS8SN-fQLw7eG1oqbAbYj58isP8zvWO70uN4rTcbMZ2mTIUBYGPQ-fat6jjFgjtvuCf8m10W5Ej-h4ufU0d5w"
-      },
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      },
-      "customField": "plugin::ckeditor.CKEditor"
-    },
     "tags": {
       "type": "relation",
       "relation": "manyToMany",
